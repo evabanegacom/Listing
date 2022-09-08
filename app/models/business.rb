@@ -1,7 +1,8 @@
 class Business < ApplicationRecord
   belongs_to :user
   has_many :reviews
-  mount_uploader :profile_photo, ProfilePhotoUploader
+  has_many :profile_photos
+  #mount_uploader :profile_photo, ProfilePhotoUploader
   mount_uploader :cover_photo, CoverPhotoUploader
   paginates_per 25
   # def self.search(search)

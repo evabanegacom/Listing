@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_03_124455) do
+ActiveRecord::Schema.define(version: 2022_09_08_081209) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,9 +27,20 @@ ActiveRecord::Schema.define(version: 2022_08_03_124455) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "cover_photo"
-    t.string "profile_photo"
     t.string "state", default: "Lagos"
     t.index ["user_id"], name: "index_businesses_on_user_id"
+  end
+
+  create_table "profile_photos", force: :cascade do |t|
+    t.bigint "business_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "photo1"
+    t.string "photo2"
+    t.string "photo3"
+    t.string "photo4"
+    t.string "photo5"
+    t.index ["business_id"], name: "index_profile_photos_on_business_id"
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -50,12 +61,10 @@ ActiveRecord::Schema.define(version: 2022_08_03_124455) do
     t.string "phone", default: "0"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
     t.string "state", default: "Lagos"
   end
 
   add_foreign_key "businesses", "users"
+  add_foreign_key "profile_photos", "businesses"
   add_foreign_key "reviews", "businesses"
 end

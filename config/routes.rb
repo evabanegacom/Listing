@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :profile_photos
   root 'static#index'
   namespace :api do
     namespace :v1 do
