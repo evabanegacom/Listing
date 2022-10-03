@@ -33,7 +33,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def auto_login
-    # @user = User.find_by(email: params[:email])
+    @user = User.find_by(email: params[:email])
     render json: { user: @user, loggedIn: true }
   end
 
