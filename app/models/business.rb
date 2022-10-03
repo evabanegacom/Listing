@@ -1,7 +1,7 @@
 class Business < ApplicationRecord
   belongs_to :user
   has_many :reviews
-  has_many :profile_photos
+  has_one :profile_photo
   #mount_uploader :profile_photo, ProfilePhotoUploader
   mount_uploader :cover_photo, CoverPhotoUploader
   paginates_per 25

@@ -3,7 +3,10 @@ class Api::V1::UsersController < ApplicationController
 
   def index
     @users = User.all
-    render json: @users, status: 200
+    #render json: @users, status: 200
+    response.headers["item_count"] = @users.count
+    paginate json: @users
+    #http://localhost:3001/api/v1/users?per_page=2&page=3
   end
   # REGISTER
 

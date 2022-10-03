@@ -47,6 +47,6 @@ class  Api::V1::ReviewsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def review_params
-      params.permit(:name, :comment, :rating)
+      params.permit(:business_id, :name, :comment, :rating)
     end
 end

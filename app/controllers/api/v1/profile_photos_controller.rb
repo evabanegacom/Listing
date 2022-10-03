@@ -1,4 +1,4 @@
-class ProfilePhotosController < ApplicationController
+class Api::V1::ProfilePhotosController < ApplicationController
   before_action :set_profile_photo, only: [:show, :update, :destroy]
 
   # GET /profile_photos
@@ -46,6 +46,6 @@ class ProfilePhotosController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def profile_photo_params
-      params.require(:profile_photo).permit(:business_id, :photo1, :photo2, :photo3, :photo4, :photo5)
+      params.permit(:business_id, :photo1, :photo2, :photo3, :photo4, :photo5)
     end
 end

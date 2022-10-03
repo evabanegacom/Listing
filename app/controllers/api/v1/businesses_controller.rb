@@ -2,8 +2,14 @@ class Api::V1::BusinessesController < ApplicationController
   before_action :set_business, only: [:show, :update, :destroy]
   # GET /businesses
   def index
-    @businesses = Business.all
-    paginate json: @businesses
+    @businesses = Business.all.includes(:reviews).order("created_at DESC")
+    @business_records_with_associations = @businesses.map do |record|
+      record.attributes.merge(
+        'review' => record.reviews,
+      )
+    end
+    response.headers["item_count"] = @business_records_with_associations.count
+    paginate json: @business_records_with_associations
   end
 
   # GET /businesses/1
@@ -37,19 +43,41 @@ class Api::V1::BusinessesController < ApplicationController
   end
 
   def search
-    if params[:search].blank?
-      render json: { data: 'Please enter a value'}, status: :ok
-    elsif !params[:search].blank?
-      @parameter = params[:search].downcase
-      @results = Business.all.where("lower(businesses.name) LIKE :search OR lower(businesses.description) LIKE :search
-      OR lower(businesses.category) LIKE :search", search: "%#{@parameter}%")
-      render json: { data: @results }, status: :ok
-    elsif @results.size.zero?
-      render json: { data: @results.size }, status: :ok
-    else
-      render json: { data: nil}
-    end
+      @description = params[:desc].downcase
+      @category = params[:category].downcase
+      @city = params[:city].downcase
+      @name = params[:name].downcase
+      @results = Business.all.where("lower(businesses.state) LIKE :city AND lower(businesses.description) LIKE :desc
+      AND lower(businesses.name) LIKE :name AND lower(businesses.category) LIKE :category", category: "%#{@category}%", desc: "%#{@description}%",  name: "%#{@name}%", city: "%#{@city}%")
+      # render json: { data: @results }, status: :ok
+      @results_records_with_associations = @results.includes(:reviews).order('created_at DESC').map do |record|
+        record.attributes.merge(
+          'review' => record.reviews,
+        )
+      end
+      paginate json: @results_records_with_associations
+    # if @results.size.zero?
+    #   render json: { data: 'no search matches' }, status: :ok
+    # else
+    #   render json: { data: nil}
+    # end
   end
+
+  # def search
+  #   if params[:search].blank?
+  #     render json: { data: 'Please enter a value'}, status: :ok
+  #   elsif !params[:search].blank?
+  #     @parameter = params[:search].downcase
+  #     @results = Business.all.where("lower(businesses.name) LIKE :search OR lower(businesses.description) LIKE :search
+  #     OR lower(businesses.category) LIKE :search", search: "%#{@parameter}%")
+  #     # render json: { data: @results }, status: :ok
+  #     paginate json: @results.order('created_at DESC')
+  #   elsif @results.size.zero?
+  #     render json: { data: 'no search matches' }, status: :ok
+  #   else
+  #     render json: { data: nil}
+  #   end
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.
